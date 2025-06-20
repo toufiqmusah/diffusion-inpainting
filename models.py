@@ -7,7 +7,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 DiffusionModel = DiffusionModelUNet(
     spatial_dims=3,
-    in_channels=2,
+    in_channels=3,
     out_channels=1,
     num_channels=(64, 128, 192),
     attention_levels=(False, True, True),
