@@ -55,12 +55,13 @@ paired_transforms = Compose([
     EnsureTyped(keys=["input", "label"]),
 ])
 
-def get_dataloader(input_dir, batch_size=1):
+def get_dataloader(input_dir, batch_size=2):
     
     data_files = read_paths_pair(input_dir)
     paired_dataset = Dataset(data=data_files, transform=paired_transforms)
-    # subset = Subset(paired_dataset, indices = list(range(350)))
-    paired_loader = DataLoader(paired_dataset, batch_size=batch_size, shuffle=True)
-    train_loader, val_loader = random_split(paired_loader, [0.8, 0.2])
+    subset = Subset(paired_dataset, indices = list(range(200)))
+    train_dataset, validation_dataset = random_split(subset, [int(0.9 * len(paired_dataset)), int(0.1 * len(paired_dataset))])
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True)
+    validation_loader = DataLoader(validation_dataset, batch_size=batch_size, shuffle=False, num_workers=4, pin_memory=True)
 
-    return train_loader, val_loader
+    return train_loader, validation_loader
