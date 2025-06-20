@@ -60,7 +60,7 @@ def get_dataloader(input_dir, batch_size=2):
     data_files = read_paths_pair(input_dir)
     paired_dataset = Dataset(data=data_files, transform=paired_transforms)
     subset = Subset(paired_dataset, indices = list(range(200)))
-    train_dataset, validation_dataset = random_split(subset, [0.9 * len(subset), 0.1 * len(subset)])
+    train_dataset, validation_dataset = random_split(subset, [0.9, 0.1])
     validation_loader = DataLoader(validation_dataset, batch_size=batch_size, shuffle=False, num_workers=4, pin_memory=True)
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True)
 
