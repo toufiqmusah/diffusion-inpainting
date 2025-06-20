@@ -5,6 +5,7 @@ import numpy as np
 from torch import nn, optim
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
+from monai.losses import SSIMLoss
 from torch.utils.data import DataLoader
 from torch.cuda.amp import autocast, GradScaler
 from generative.inferers import DiffusionInferer
@@ -29,6 +30,9 @@ def train_diffusion(model, train_loader, val_loader, device, n_epochs=10, val_in
     optimizer = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=2.5e-5) 
     inferer = DiffusionInferer(scheduler)
 
+    criterion_ssim = SSIMLoss(k1=0.01, k2=0.03, win_size=11, spatial_dims=3, data_range=2.0, kernel_sigma=1.5, reduction="mean", kernel_type="gaussian",).to(device)
+
+
     for epoch in range(n_epochs):
         model.train()
         epoch_loss = 0
@@ -51,7 +55,8 @@ def train_diffusion(model, train_loader, val_loader, device, n_epochs=10, val_in
                 prediction = model(x=combined, timesteps=timesteps)
                 # Get model prediction
 
-                loss = F.mse_loss(prediction.float(), noise.float())
+                loss_ssim = criterion_ssim(prediction.float(), noise.float())
+                loss = F.mse_loss(prediction.float(), noise.float()) + loss_ssim * 2.5
             scaler.scale(loss).backward()
             scaler.step(optimizer)
             scaler.update()
@@ -85,14 +90,18 @@ def train_diffusion(model, train_loader, val_loader, device, n_epochs=10, val_in
     print(f"train diffusion completed, total time: {total_time}.")
     plt.style.use("seaborn-bright")
     plt.title("Learning Curves Diffusion Model", fontsize=20)
-    plt.plot(np.linspace(1, n_epochs, n_epochs), epoch_loss_list, color="C0", linewidth=2.0, label="Train")
+    train_epochs = np.arange(1, n_epochs + 1)
+    plt.plot(train_epochs, epoch_loss_list, color="C0", linewidth=2.0, label="Train")
+    val_x_epochs = np.arange(0, n_epochs, val_interval) + 1
+
     plt.plot(
-        np.linspace(val_interval, n_epochs, int(n_epochs / val_interval)),
+        val_x_epochs,
         val_epoch_loss_list,
         color="C1",
         linewidth=2.0,
         label="Validation",
     )
+
     plt.yticks(fontsize=12)
     plt.xticks(fontsize=12)
     plt.xlabel("Epochs", fontsize=16)

@@ -6,11 +6,11 @@ import torch
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # paths
-INPUT_DIR = "/kaggle/working/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Training"
+INPUT_DIR = "/kaggle/working/diffusion-inpainting/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Training"
 
 # training parameters
 BATCH_SIZE = 1
-NUM_EPOCHS = 5
+NUM_EPOCHS = 350
 
 # loss weights
 LAMBDA_L1 = 1.0
