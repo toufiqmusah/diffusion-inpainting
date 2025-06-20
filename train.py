@@ -20,7 +20,12 @@ def train_diffusion(model, train_loader, val_loader, device, n_epochs=10, val_in
     epoch_loss_list = []
     val_epoch_loss_list = []
 
-    scheduler = DDIMScheduler(num_train_timesteps=1000, beta_start=0.0001, beta_end=0.02, beta_schedule="linear")
+    scheduler = DDIMScheduler(num_train_timesteps=1000,  
+                          schedule="sigmoid_beta",
+                          beta_start=1e-4,           
+                          beta_end=2e-2,               
+                          sig_range=8)
+    
     optimizer = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=2.5e-5) 
     inferer = DiffusionInferer(scheduler)
 
