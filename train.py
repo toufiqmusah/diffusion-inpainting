@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from torch.utils.data import DataLoader
 from torch.cuda.amp import autocast, GradScaler
 from generative.inferers import DiffusionInferer
-from generative.networks.schedulers.ddpm import DDIMScheduler
+from generative.networks.schedulers import DDPMScheduler, DDIMScheduler
 
 from utils import save_comparison
 
@@ -45,7 +45,7 @@ def train_diffusion(model, train_loader, val_loader, device, n_epochs=10, val_in
                 )  # we concatenate the brain MR image with the noisy realmenatation mask, to condition the generation process
                 prediction = model(x=combined, timesteps=timesteps)
                 # Get model prediction
-                
+
                 loss = F.mse_loss(prediction.float(), noise.float())
             scaler.scale(loss).backward()
             scaler.step(optimizer)
