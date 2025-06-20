@@ -10,7 +10,7 @@ INPUT_DIR = "/kaggle/working/ASNR-MICCAI-BraTS2023-Local-Synthesis-Challenge-Tra
 
 # training parameters
 BATCH_SIZE = 1
-NUM_EPOCHS = 30
+NUM_EPOCHS = 5
 
 # loss weights
 LAMBDA_L1 = 1.0
