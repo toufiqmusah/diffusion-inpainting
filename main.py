@@ -23,5 +23,5 @@ train_dataloader, validation_dataloader = get_dataloader(INPUT_DIR, batch_size=B
 #wandb.init(project="BraTS-inPainting-Diffusuin-2025")
 
 # run training
-trained_G, trained_D = train_diffusion(DiffusionModel, train_dataloader, validation_dataloader, device, NUM_EPOCHS)
+trained_D = train_diffusion(DiffusionModel, train_dataloader, validation_dataloader, device, NUM_EPOCHS)
  
