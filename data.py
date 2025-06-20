@@ -39,7 +39,7 @@ paired_transforms = Compose([
     Orientationd(keys=["mri", "mask", "label"], axcodes="RAS"),
     Spacingd(
         keys=["mri", "mask", "label"],
-        pixdim=(2, 2, 2),
+        pixdim=(3, 3, 3),
         mode=("bilinear", "bilinear", "nearest")
     ),
     CenterSpatialCropd(keys=["mri", "mask", "label"], roi_size=(128, 128, 80)),
@@ -55,7 +55,7 @@ paired_transforms = Compose([
     EnsureTyped(keys=["input", "label"]),
 ])
 
-def get_dataloader(input_dir, batch_size=2):
+def get_dataloader(input_dir, batch_size=1):
     
     data_files = read_paths_pair(input_dir)
     paired_dataset = Dataset(data=data_files, transform=paired_transforms)
