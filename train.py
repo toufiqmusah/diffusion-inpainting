@@ -77,8 +77,7 @@ def train_diffusion(model, train_loader, val_loader, device, n_epochs=10, val_in
             val_epoch_loss_list.append(val_epoch_loss / (step + 1))
         
         if (epoch + 1) % 1 == 0:
-            pass
-            #save_comparison(real_img=real, fake_img=prediction, input_img=input, epoch=epoch + 1)
+            save_comparison(real_img=real, fake_img=prediction, input_img=input, epoch=epoch + 1)
 
 
     torch.save(model.state_dict(), "./DiffusionModel.pt")
