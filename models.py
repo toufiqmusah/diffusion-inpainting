@@ -10,5 +10,5 @@ DiffusionModel = DiffusionModelUNet(
     attention_levels=(False, True, True),
     num_res_blocks=1,
     num_head_channels=64,
-    with_conditioning=True,
+    with_conditioning=False,
 )
