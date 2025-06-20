@@ -2,8 +2,6 @@
 
 import os
 import wandb
-import torch
-import pickle
 import matplotlib.pyplot as plt
 
 from config import WEIGHT_DIR, LOG_FILE, GENERATED_DIR
@@ -42,35 +40,6 @@ def save_comparison(real_img, fake_img, input_img, epoch):
     ax3.axis('off')
 
     plt.suptitle(f'Epoch {epoch}')
-    
     plt.savefig(f'{GENERATED_DIR}/comparison_epoch_{epoch}.png', bbox_inches='tight', dpi=224)
-    
-    # log to wandb
     wandb.log({"Comparison": wandb.Image(plt.gcf(), caption=f"Epoch {epoch}")})
     plt.close()
-
-def saving_logs(result):
-    with open(LOG_FILE, "wb") as f:
-        pickle.dump([result], f)
-
-def saving_model(D, G, e):
-    os.makedirs(WEIGHT_DIR, exist_ok=True)
-    torch.save(G.state_dict(), f"{WEIGHT_DIR}/G{str(e+1)}.pth")
-    torch.save(D.state_dict(), f"{WEIGHT_DIR}/D{str(e+1)}.pth")
-
-def show_losses(g, d):
-    fig, axes = plt.subplots(1, 2, figsize=(14, 6))
-    ax = axes.ravel()
-    epochs = list(range(len(g)))
-    ax[0].plot(epochs, g)
-    ax[0].set_title("Generator Loss")
-    ax[0].set_xlabel("Epoch")
-    ax[0].set_ylabel("Loss")
-    ax[0].grid(True)
-    ax[1].plot(epochs, d)
-    ax[1].set_title("Discriminator Loss")
-    ax[1].set_xlabel("Epoch")
-    ax[1].set_ylabel("Loss")
-    ax[1].grid(True)
-    plt.tight_layout()
-    plt.show()

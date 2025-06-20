@@ -17,8 +17,8 @@ from monai.transforms import (
     EnsureChannelFirstd,
     ScaleIntensityRangePercentilesd)
 
-from torch.utils.data import Subset, random_split
 from monai.data import Dataset, DataLoader
+from torch.utils.data import Subset, random_split
 
 def read_paths_pair(root_dir: str):
     
@@ -61,7 +61,7 @@ def get_dataloader(input_dir, batch_size=2):
     paired_dataset = Dataset(data=data_files, transform=paired_transforms)
     subset = Subset(paired_dataset, indices = list(range(200)))
     train_dataset, validation_dataset = random_split(subset, [int(0.9 * len(paired_dataset)), int(0.1 * len(paired_dataset))])
-    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True)
     validation_loader = DataLoader(validation_dataset, batch_size=batch_size, shuffle=False, num_workers=4, pin_memory=True)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4, pin_memory=True)
 
     return train_loader, validation_loader
